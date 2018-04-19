@@ -21,11 +21,59 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+const Player = function() {
+	this.sprite = 'images/char-princess-girl.png'
+	this.x = 200;
+	this.y = 400;
+};
+
+Player.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+//TO DO : CHANGE THIS TO SWITCH TOMMORRRROOWWWWW!!!!
+Player.prototype.update = function() {
+	let x = 50;
+	if (player.x < -10) {
+		this.x += 420;
+	}
+	if (player.x > 400) {
+		this.x = -1;
+	}
+	if (player.y > 425) {
+		this.y = 370;
+	}
+	else if (player.y < 0) {
+		this.reset();
+	}
+
+}
+
+Player.prototype.handleInput = function(e) {
+	if (e == 'right') {
+		this.x += 50;
+	}
+	if (e  == 'left') {
+		this.x -= 50;
+	}
+	if (e == 'down') {
+		this.y += 50;
+	}
+	if (e  == 'up') {
+		this.y -= 50;
+	}
+}
+
+Player.prototype.reset = function(e) {
+	this.x = 200;
+	this.y = 400;
+};
+
+let player = new Player();
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 
-
+let allEnemies = [];
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
