@@ -33,8 +33,8 @@ Player.prototype.render = function() {
 //TO DO : CHANGE THIS TO SWITCH TOMMORRRROOWWWWW!!!!
 Player.prototype.update = function() {
 	let x = 50;
-	if (player.x < -10) {
-		this.x += 420;
+	if (player.x < -20) {
+		this.x += 450;
 	}
 	if (player.x > 400) {
 		this.x = -1;
