@@ -47,7 +47,7 @@ Enemy.prototype.render = function() {
 };
 
 const Player = function() {
-	this.sprite = 'images/star.png'
+	this.sprite = 'images/char-boy.png'
 	this.x = 200;
 	this.y = 420;
 	this.width = 100;
