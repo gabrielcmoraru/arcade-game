@@ -6,9 +6,10 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.x = Math.floor(Math.random()*150);
-    this.y = Math.floor(Math.random()*220);
-
+    this.x = Math.floor(Math.random()*100);
+    this.y = Math.floor(Math.random()*250);
+    this.width = 100;
+    this.height = 150;
 };
 
 // Update the enemy's position, required method for game
@@ -22,26 +23,39 @@ Enemy.prototype.update = function(dt) {
         this.x += (150 * dt);
     }
     else {this.x = -90;};
-
-     if (player.y < this.y + 50 && this.y < player.y + 50 &&
-    	player.x < this.x + 50 && this.x < player.x + 50) {
-    	player.reset();
-    }
 };
 
+// Player.prototype.crash = function(){
+// 	 if ((this.y + this.height < player.y) ||
+//     (this.y > player.y + player.height) ||
+//     (this.x + this.width) < player.x) ||
+//     (this.x > player.x + player.width)) {
+
+// }
+// if ((mybottom < othertop) ||
+//                (mytop > otherbottom) ||
+//                (myright < otherleft) ||
+//                (myleft > otherright)) {
+//            crash = false;
+//         }
+//         return crash;
+//     }
+// };
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.width, this.height);
 };
 
 const Player = function() {
 	this.sprite = 'images/star.png'
 	this.x = 200;
 	this.y = 420;
+	this.width = 100;
+	this.height = 150;
 };
 
 Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.width, this.height);
 };
 //TO DO : CHANGE THIS TO SWITCH TOMMORRRROOWWWWW!!!!
 Player.prototype.update = function() {
