@@ -1,124 +1,125 @@
 // Enemies our player must avoid
 var Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
+		// Variables applied to each of our instances go here,
+		// we've provided one for you to get started
 
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
-    this.x = Math.floor(Math.random()*100);
-    this.y = Math.floor(Math.random()*250);
-    this.width = 100;
-    this.height = 150;
+		// The image/sprite for our enemies, this uses
+		// a helper we've provided to easily load images
+		this.sprite = 'images/enemy-bug.png';
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-
-     if (this.x < 505) {
-        this.x += (150 * dt);
-    }
-    else {this.x = -90;};
+		// You should multiply any movement by the dt parameter
+		// which will ensure the game runs at the same speed for
+		// all computers.
 };
 
-// Player.prototype.crash = function(){
-// 	 if ((this.y + this.height < player.y) ||
-//     (this.y > player.y + player.height) ||
-//     (this.x + this.width) < player.x) ||
-//     (this.x > player.x + player.width)) {
-
-// }
-// if ((mybottom < othertop) ||
-//                (mytop > otherbottom) ||
-//                (myright < otherleft) ||
-//                (myleft > otherright)) {
-//            crash = false;
-//         }
-//         return crash;
-//     }
-// };
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.width, this.height);
+		ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 const Player = function() {
-	this.sprite = 'images/char-boy.png'
+	this.sprite = 'images/char-princess-girl.png'
 	this.x = 200;
-	this.y = 420;
+	this.y = 400;
 	this.width = 100;
-	this.height = 150;
+	this.height = 100;
 };
 
 Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.width, this.height);
+		ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
-//TO DO : CHANGE THIS TO SWITCH TOMMORRRROOWWWWW!!!!
-Player.prototype.update = function() {
-	let x = 50;
-	if (player.x < -20) {
-		this.x += 450;
-	}
-	if (player.x > 400) {
-		this.x = -1;
-	}
-	if (player.y > 425) {
-		this.y = 370;
-	}
-	else if (player.y < -30) {
-		this.reset();
-	}
 
+//Movement keys object
+let movementKey = {
+	37: 'left',
+	38: 'up',
+	39: 'right',
+	40: 'down',
+	rightPressed : false,
+	leftPressed : false,
+	upPressed : false,
+	downPressed : false,
+	speed : 5
 }
 
-Player.prototype.handleInput = function(e) {
-	if (e == 'right') {
-		this.x += 85;
+//Conditions for movement
+Player.prototype.update = function() {
+	if(movementKey.rightPressed && this.x + this.width < 500) {
+			this.x += movementKey.speed;
 	}
-	if (e  == 'left') {
-		this.x -= 85;
+	if(movementKey.leftPressed && this.x > 0) {
+			this.x -= movementKey.speed;
 	}
-	if (e == 'down') {
-		this.y += 85;
+	if(movementKey.upPressed) {
+			this.y -= movementKey.speed;
+			if ( this.y < -60) {
+				player.reset();
+			}
 	}
-	if (e  == 'up') {
-		this.y -= 85;
+	else if(movementKey.downPressed && this.y < 440) {
+			this.y += movementKey.speed;
+	}
+}
+
+//Conditions to enable movement
+Player.prototype.enableInput = function(e) {
+	if(e == 'right') {
+			movementKey.rightPressed = true;
+	}
+	if(e == 'left') {
+			movementKey.leftPressed = true;
+	}
+	if(e == 'up') {
+			movementKey.upPressed = true;
+	}
+	else if(e == 'down') {
+			movementKey.downPressed = true;
+	}
+}
+
+//Conditions to disable input
+Player.prototype.disableInput = function(e) {
+	if(e == 'right') {
+			movementKey.rightPressed = false;
+	}
+	if(e == 'left') {
+			movementKey.leftPressed = false;
+	}
+	if(e == 'up') {
+			movementKey.upPressed = false;
+	}
+	else if(e == 'down') {
+			movementKey.downPressed = false;
 	}
 }
 
 Player.prototype.reset = function(e) {
 	this.x = 200;
-	this.y = 420;
+	this.y = 400;
 };
 
 let player = new Player();
-let enemy = new Enemy();
-let enemy2 = new Enemy();
-
-let allEnemies = [enemy, enemy2];
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 
+let allEnemies = [];
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-
-
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
-    var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
-    };
 
-    player.handleInput(allowedKeys[e.keyCode]);
-});
+//Keyup and Keydown event listener
+document.addEventListener('keyup', function(e) {
+		player.disableInput(movementKey[e.keyCode]);
+}, false);
+
+document.addEventListener('keydown', function(e) {
+		player.enableInput(movementKey[e.keyCode]);
+}, false);
