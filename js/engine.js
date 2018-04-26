@@ -177,14 +177,7 @@ var Engine = (function(global) {
         'images/char-cat-girl.png',
         'images/char-horn-girl.png',
         'images/char-pink-girl.png',
-<<<<<<< HEAD
-
-||||||| merged common ancestors
         'images/char-princess-girl.png',
-
-=======
-
->>>>>>> 2b4e504a1350a37408018e8005f7a4bfcb09fa11
     ]);
     Resources.onReady(init);
 
