@@ -14,33 +14,41 @@ var Enemy = function(x, y, speed) {
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
+		if (this.x < player.x + 50 &&
+			this.x + 50 > player.x &&
+			this.y < player.y + 50 &&
+			this.y + 50 > player.y)  {
+			player.reset();
+		}
 		// You should multiply any movement by the dt parameter
 		// which will ensure the game runs at the same speed for
 		// all computers.
-		let minimSpeed = 100;
+		let minSpeed = 100;
 		if (this.x < 500) {
 			this.x += this.speed * dt;
 		} else {
 			this.x =- Math.floor(Math.random() * 300);
-			this.speed = Math.floor(Math.random() * 300) + minimSpeed;
+			this.speed = Math.floor(Math.random() * 300) + minSpeed;
 		}
 };
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-		ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+	ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.width, this.height);
+	this.width = Resources.get(enemy.sprite).naturalWidth;
+	this.height = Resources.get(enemy.sprite).naturalHeight;
 };
 
 const Player = function() {
-	this.sprite = 'images/char-princess-girl.png'
+	this.sprite = 'images/char-princess-girl.png';
 	this.x = 200;
 	this.y = 400;
-	this.width = 100;
-	this.height = 100;
 };
 
 Player.prototype.render = function() {
-		ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+	ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.width, this.height);
+	this.width = Resources.get(player.sprite).naturalWidth;
+	this.height = Resources.get(player.sprite).naturalHeight;
 };
 
 //Movement keys object
