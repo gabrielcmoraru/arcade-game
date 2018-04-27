@@ -14,10 +14,11 @@ var Enemy = function(x, y, speed) {
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-		if (this.x < player.x + 50 &&
-			this.x + 50 > player.x &&
-			this.y < player.y + 50 &&
-			this.y + 50 > player.y)  {
+	//Collision logic
+		if (this.x < player.x + player.width/2 &&
+			this.x + this.width/2 > player.x &&
+			this.y < player.y + player.height/2 &&
+			this.y + this.height/2 > player.y)  {
 			player.reset();
 		}
 		// You should multiply any movement by the dt parameter
