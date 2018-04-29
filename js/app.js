@@ -62,34 +62,7 @@ Player.prototype.movementKey = {
 	leftPressed : false,
 	upPressed : false,
 	downPressed : false,
-	speed : 15
-}
-  let playerY = 0;
-	let playerX = 0;
-Player.prototype.touchHandler = function(e) {
-  playerX = Math.round(e.touches[0].pageX -  player.width / 2);
-  playerY = Math.round(e.touches[0].pageY - player.height / 2);
-  if (playerY > player.y) {
-		player.y += player.movementKey.speed;
-	}
-	if (playerY < player.y) {
-		player.y -= player.movementKey.speed;
-		if ( player.y < -60) {
-				player.reset();
-			}
-	}
-	if (playerX > player.x) {
-		player.x += player.movementKey.speed;
-	}
-	if (playerX < player.x) {
-		player.x -= player.movementKey.speed;
-	}
-}
-Player.prototype.touchStop = function(e) {
-    if(e.touches ) {
-        playerX = player.x;
-        playerY = player.y;
-    }
+	speed : 5
 }
 
 //Conditions for movement
@@ -172,8 +145,3 @@ document.addEventListener('keyup', function(e) {
 document.addEventListener('keydown', function(e) {
 		player.enableInput(player.movementKey[e.keyCode]);
 }, false);
-document.getElementsByTagName('canvas');
-canvas.addEventListener("touchstart", player.touchHandler);
-
-canvas.addEventListener("touchmove", player.touchHandler);
-document.addEventListener("touchend", player.touchStop);
