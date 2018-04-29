@@ -62,21 +62,21 @@ Player.prototype.movementKey = {
 	leftPressed : false,
 	upPressed : false,
 	downPressed : false,
-	speed : 5
+	speed : 15
 }
   let playerY = 0;
 	let playerX = 0;
 Player.prototype.touchHandler = function(e) {
-
-    if(e.touches ) {
-        playerX = e.touches[0].pageX - ctx.canvas.offsetLeft - player.width / 2;
-        playerY = e.touches[0].pageY - ctx.canvas.offsetTop - player.height / 2;
-    }
-    	if (playerY > player.y) {
+  playerX = Math.round(e.touches[0].pageX -  player.width / 2);
+  playerY = Math.round(e.touches[0].pageY - player.height / 2);
+  if (playerY > player.y) {
 		player.y += player.movementKey.speed;
 	}
 	if (playerY < player.y) {
 		player.y -= player.movementKey.speed;
+		if ( player.y < -60) {
+				player.reset();
+			}
 	}
 	if (playerX > player.x) {
 		player.x += player.movementKey.speed;
@@ -86,7 +86,6 @@ Player.prototype.touchHandler = function(e) {
 	}
 }
 Player.prototype.touchStop = function(e) {
-
     if(e.touches ) {
         playerX = player.x;
         playerY = player.y;
@@ -95,8 +94,6 @@ Player.prototype.touchStop = function(e) {
 
 //Conditions for movement
 Player.prototype.update = function() {
-
-
 	if (player.movementKey.rightPressed && this.x + this.width < 500) {
 			this.x += player.movementKey.speed;
 	}
@@ -175,8 +172,8 @@ document.addEventListener('keyup', function(e) {
 document.addEventListener('keydown', function(e) {
 		player.enableInput(player.movementKey[e.keyCode]);
 }, false);
+document.getElementsByTagName('canvas');
+canvas.addEventListener("touchstart", player.touchHandler);
 
-document.addEventListener("touchstart", player.touchHandler);
-
-document.addEventListener("touchmove", player.touchHandler);
+canvas.addEventListener("touchmove", player.touchHandler);
 document.addEventListener("touchend", player.touchStop);
