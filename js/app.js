@@ -24,7 +24,7 @@ Enemy.prototype.update = function(dt) {
 		// You should multiply any movement by the dt parameter
 		// which will ensure the game runs at the same speed for
 		// all computers.
-		let minSpeed = 100;
+		let minSpeed = 50;
 		if (this.x < 500) {
 			this.x += this.speed * dt;
 		} else {
@@ -116,11 +116,28 @@ Player.prototype.disableInput = function(e) {
 	}
 }
 
+//Game object
+const Game = function() {
+	this.paused = false;
+}
+
+//Pause method
+Game.prototype.togglePause = function()
+{
+	!this.paused ? this.paused = true : this.paused = false;
+}
+
 Player.prototype.reset = function(e) {
-	this.x = 200;
-	this.y = 400;
+	game.paused = true;
+	player.sprite = 'images/char-boy.png';
+	setTimeout(function() {
+		this.x = 200;
+		this.y = 400;
+		game.paused = false;
+	}.bind(this), 1500);
 };
 
+let game = new Game();
 let player = new Player();
 // Now write your own player class
 // This class requires an update(), render() and
@@ -145,3 +162,10 @@ document.addEventListener('keyup', function(e) {
 document.addEventListener('keydown', function(e) {
 		player.enableInput(player.movementKey[e.keyCode]);
 }, false);
+document.addEventListener('keydown', function (e) {
+var key = e.keyCode;
+if (key === 32)// space key
+{
+    game.togglePause();
+}
+});
