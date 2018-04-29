@@ -53,7 +53,7 @@ Player.prototype.render = function() {
 };
 
 //Movement keys object
-let movementKey = {
+Player.prototype.movementKey = {
 	37: 'left',
 	38: 'up',
 	39: 'right',
@@ -64,55 +64,85 @@ let movementKey = {
 	downPressed : false,
 	speed : 5
 }
+  let playerY = 0;
+	let playerX = 0;
+Player.prototype.touchHandler = function(e) {
+
+    if(e.touches ) {
+        playerX = e.touches[0].pageX - ctx.canvas.offsetLeft - player.width / 2;
+        playerY = e.touches[0].pageY - ctx.canvas.offsetTop - player.height / 2;
+    }
+    	if (playerY > player.y) {
+		player.y += player.movementKey.speed;
+	}
+	if (playerY < player.y) {
+		player.y -= player.movementKey.speed;
+	}
+	if (playerX > player.x) {
+		player.x += player.movementKey.speed;
+	}
+	if (playerX < player.x) {
+		player.x -= player.movementKey.speed;
+	}
+}
+Player.prototype.touchStop = function(e) {
+
+    if(e.touches ) {
+        playerX = player.x;
+        playerY = player.y;
+    }
+}
 
 //Conditions for movement
 Player.prototype.update = function() {
-	if(movementKey.rightPressed && this.x + this.width < 500) {
-			this.x += movementKey.speed;
+
+
+	if (player.movementKey.rightPressed && this.x + this.width < 500) {
+			this.x += player.movementKey.speed;
 	}
-	if(movementKey.leftPressed && this.x > 0) {
-			this.x -= movementKey.speed;
+	if (player.movementKey.leftPressed && this.x > 0) {
+			this.x -= player.movementKey.speed;
 	}
-	if(movementKey.upPressed) {
-			this.y -= movementKey.speed;
+	if (player.movementKey.upPressed) {
+			this.y -= player.movementKey.speed;
 			if ( this.y < -60) {
 				player.reset();
 			}
 	}
-	else if(movementKey.downPressed && this.y < 440) {
-			this.y += movementKey.speed;
+	else if(player.movementKey.downPressed && this.y < 440) {
+			this.y += player.movementKey.speed;
 	}
 }
 
 //Conditions to enable movement
 Player.prototype.enableInput = function(e) {
-	if(e == 'right') {
-			movementKey.rightPressed = true;
+	if (e == 'right') {
+			player.movementKey.rightPressed = true;
 	}
-	if(e == 'left') {
-			movementKey.leftPressed = true;
+	if (e == 'left') {
+			player.movementKey.leftPressed = true;
 	}
-	if(e == 'up') {
-			movementKey.upPressed = true;
+	if (e == 'up') {
+			player.movementKey.upPressed = true;
 	}
 	else if(e == 'down') {
-			movementKey.downPressed = true;
+			player.movementKey.downPressed = true;
 	}
 }
 
 //Conditions to disable input
 Player.prototype.disableInput = function(e) {
-	if(e == 'right') {
-			movementKey.rightPressed = false;
+	if (e == 'right') {
+			player.movementKey.rightPressed = false;
 	}
-	if(e == 'left') {
-			movementKey.leftPressed = false;
+	if (e == 'left') {
+			player.movementKey.leftPressed = false;
 	}
-	if(e == 'up') {
-			movementKey.upPressed = false;
+	if (e == 'up') {
+			player.movementKey.upPressed = false;
 	}
-	else if(e == 'down') {
-			movementKey.downPressed = false;
+	else if (e == 'down') {
+			player.movementKey.downPressed = false;
 	}
 }
 
@@ -139,9 +169,14 @@ let allEnemies = [enemy, enemy2, enemy3, enemy4];
 
 //Keyup and Keydown event listener
 document.addEventListener('keyup', function(e) {
-		player.disableInput(movementKey[e.keyCode]);
+		player.disableInput(player.movementKey[e.keyCode]);
 }, false);
 
 document.addEventListener('keydown', function(e) {
-		player.enableInput(movementKey[e.keyCode]);
+		player.enableInput(player.movementKey[e.keyCode]);
 }, false);
+
+document.addEventListener("touchstart", player.touchHandler);
+
+document.addEventListener("touchmove", player.touchHandler);
+document.addEventListener("touchend", player.touchStop);
