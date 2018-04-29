@@ -15,10 +15,10 @@ var Enemy = function(x, y, speed) {
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
 	//Collision logic
-		if (this.x < player.x + player.width/2 &&
-			this.x + this.width/2 > player.x &&
-			this.y < player.y + player.height/2 &&
-			this.y + this.height/2 > player.y)  {
+		if (this.x < player.x + player.width / 2 &&
+			this.x + this.width / 2 > player.x &&
+			this.y < player.y + player.height / 3 &&
+			this.y + this.height / 3 > player.y)  {
 			player.reset();
 		}
 		// You should multiply any movement by the dt parameter
@@ -125,10 +125,10 @@ let player = new Player();
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-let enemy = new Enemy(0, 60, 10);
-let enemy2 = new Enemy(240, 145, 5);
-let enemy3 = new Enemy(-750, 225, 15);
-let enemy4 = new Enemy(-1540, 225, 24);
+let enemy = new Enemy(0, 65, 10);
+let enemy2 = new Enemy(240, 150, 5);
+let enemy3 = new Enemy(-750, 230, 15);
+let enemy4 = new Enemy(-1540, 230, 24);
 let allEnemies = [enemy, enemy2, enemy3, enemy4];
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
