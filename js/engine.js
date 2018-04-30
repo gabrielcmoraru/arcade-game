@@ -44,12 +44,14 @@ var Engine = (function(global) {
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
          */
-				if(!game.paused)
+				if (!game.paused)
 				{
 				update(dt);
 				render();
 				}
-
+				if (game.paused) {
+					game.gotHit();
+				}
 
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.

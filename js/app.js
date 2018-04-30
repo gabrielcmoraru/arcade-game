@@ -117,15 +117,12 @@ Player.prototype.disableInput = function(e) {
 }
 
 Player.prototype.reset = function(e) {
-	// game.paused = true;
-	this.width = 45;
-	this.height = 45;
+	game.paused = true;
 	setTimeout(function() {
-//////////////HERE WE ARE !
 		this.x = 200;
 		this.y = 400;
 		game.paused = false;
-	}.bind(this), 1500);
+	}.bind(this), 2000);
 };
 
 //Game object
@@ -139,6 +136,27 @@ Game.prototype.togglePause = function()
 	!this.paused ? this.paused = true : this.paused = false;
 }
 
+//Animation
+Game.prototype.gotHit = function(){
+
+var imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+  var data = imageData.data;
+   var colorade = function() {
+    for (var i = 0; i < data.length; i += 4) {
+      data[i]     = data[i] + 3; // red
+      data[i + 1] = data[i+1] + 4; // green
+      data[i + 2] = data[i+2] + 5; // blue
+      data[i + 3] = data[i+3] + 6; // alpha
+    }
+    ctx.putImageData(imageData, 0, 0);
+  };
+  colorade();
+  ctx.color = 'white';
+	ctx.font = '65px serif';
+  this.text = 'Let\'s try this again';
+  textWidth = ctx.measureText(this.text).width;
+  ctx.fillText(this.text , (ctx.canvas.width/2) - (textWidth / 2), ctx.canvas.height/2);
+};
 
 let game = new Game();
 let player = new Player();
