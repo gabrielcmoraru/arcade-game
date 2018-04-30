@@ -47,8 +47,9 @@ var Engine = (function(global) {
 				if(!game.paused)
 				{
 				update(dt);
+				render();
 				}
-        render();
+
 
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.

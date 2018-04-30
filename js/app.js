@@ -116,6 +116,18 @@ Player.prototype.disableInput = function(e) {
 	}
 }
 
+Player.prototype.reset = function(e) {
+	// game.paused = true;
+	this.width = 45;
+	this.height = 45;
+	setTimeout(function() {
+//////////////HERE WE ARE !
+		this.x = 200;
+		this.y = 400;
+		game.paused = false;
+	}.bind(this), 1500);
+};
+
 //Game object
 const Game = function() {
 	this.paused = false;
@@ -127,15 +139,6 @@ Game.prototype.togglePause = function()
 	!this.paused ? this.paused = true : this.paused = false;
 }
 
-Player.prototype.reset = function(e) {
-	game.paused = true;
-	player.sprite = 'images/char-boy.png';
-	setTimeout(function() {
-		this.x = 200;
-		this.y = 400;
-		game.paused = false;
-	}.bind(this), 1500);
-};
 
 let game = new Game();
 let player = new Player();
