@@ -49,9 +49,9 @@ var Engine = (function(global) {
 				update(dt);
 				render();
 				}
-				if (game.paused) {
-					game.gotHit();
-				}
+				// if (game.paused) {
+				// 	game.gotHit();
+				// }
 
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
@@ -95,10 +95,11 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-        allEnemies.forEach(function(enemy) {
-            enemy.update(dt);
-        });
-        player.update();
+        if (enemy.live) {allEnemies.forEach(function(enemy) {
+                    enemy.update(dt);
+                });}
+        if (player.live) {
+                player.update();}
     }
 
     /* This function initially draws the "game level", it will then call

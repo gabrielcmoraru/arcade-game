@@ -6,6 +6,7 @@ var Enemy = function(x, y, speed) {
 		// The image/sprite for our enemies, this uses
 		// a helper we've provided to easily load images
 		this.sprite = 'images/enemy-bug.png';
+		this.live = true;
 		this.x = x;
 		this.y = y;
 		this.speed = 150;
@@ -19,7 +20,7 @@ Enemy.prototype.update = function(dt) {
 			this.x + this.width / 2 > player.x &&
 			this.y < player.y + player.height / 3 &&
 			this.y + this.height / 3 > player.y)  {
-			player.reset();
+			game.gotHit();
 		}
 		// You should multiply any movement by the dt parameter
 		// which will ensure the game runs at the same speed for
@@ -42,6 +43,7 @@ Enemy.prototype.render = function() {
 
 const Player = function() {
 	this.sprite = 'images/char-princess-girl.png';
+	this.live = true;
 	this.x = 200;
 	this.y = 400;
 };
@@ -76,7 +78,7 @@ Player.prototype.update = function() {
 	if (player.movementKey.upPressed) {
 			this.y -= player.movementKey.speed;
 			if ( this.y < -60) {
-				player.reset();
+				game.gotHit();
 			}
 	}
 	else if(player.movementKey.downPressed && this.y < 440) {
@@ -117,12 +119,8 @@ Player.prototype.disableInput = function(e) {
 }
 
 Player.prototype.reset = function(e) {
-	game.paused = true;
-	setTimeout(function() {
 		this.x = 200;
 		this.y = 400;
-		game.paused = false;
-	}.bind(this), 2000);
 };
 
 //Game object
@@ -138,15 +136,23 @@ Game.prototype.togglePause = function()
 
 //Animation
 Game.prototype.gotHit = function(){
+	player.live = false;
+	enemy.live = false;
+	player.sprite = 'images/boom.gif'
+	setTimeout(function() {
+	player.reset();
+	player.live = true;
+	enemy.live = true;
+	}.bind(this), 2000);
 
 var imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
   var data = imageData.data;
    var colorade = function() {
     for (var i = 0; i < data.length; i += 4) {
-      data[i]     = data[i] + 3; // red
-      data[i + 1] = data[i+1] + 4; // green
-      data[i + 2] = data[i+2] + 5; // blue
-      data[i + 3] = data[i+3] + 6; // alpha
+      data[i]     = data[i] ; // red
+      data[i + 1] = data[i+1] + 1; // green
+      data[i + 2] = data[i+2] + 2; // blue
+      data[i + 3] = data[i+3] + 3; // alpha
     }
     ctx.putImageData(imageData, 0, 0);
   };
