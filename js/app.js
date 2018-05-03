@@ -127,7 +127,7 @@ Player.prototype.reset = function(e) {
 const Game = function() {
 	this.paused = false;
 	this.level = 1;
-	this.playerLives = 10;
+	this.playerLives = 9;
 	this.playerLivesIcon = 'images/heart.png';
 	this.score = 0;
 }
