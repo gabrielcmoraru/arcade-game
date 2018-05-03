@@ -20,7 +20,7 @@ Enemy.prototype.update = function(dt) {
 			this.x + this.width / 2 > player.x &&
 			this.y < player.y + player.height / 3 &&
 			this.y + this.height / 3 > player.y)  {
-			game.gotHit();
+			game.playerLives >= 1 ? game.gotHit() : game.gameOver();
 		}
 		// You should multiply any movement by the dt parameter
 		// which will ensure the game runs at the same speed for
@@ -78,7 +78,7 @@ Player.prototype.update = function() {
 	if (player.movementKey.upPressed) {
 			this.y -= player.movementKey.speed;
 			if ( this.y < -30) {
-				game.gotHit();
+				game.levelUp();
 			}
 	}
 	else if(player.movementKey.downPressed && this.y < 440) {
@@ -127,55 +127,79 @@ Player.prototype.reset = function(e) {
 const Game = function() {
 	this.paused = false;
 	this.level = 1;
-	this.playerLives = 8;
+	this.playerLives = 10;
 	this.playerLivesIcon = 'images/heart.png';
-	this.score = 110;
+	this.score = 0;
 }
 
 //Game board method
 Game.prototype.board = function(){
 	//Update Level
 	ctx.canvas.style.letterSpacing = '2px';
-	ctx.fillStyle = 'orange';
+	ctx.fillStyle = 'gold';
 	ctx.storkeStyle = 'black';
 	ctx.lineWidth = 5;
 	ctx.font = '20pt tahoma';
-  ctx.strokeText(`Level ${game.level}`, 5, 40);
-  ctx.fillText(`Level ${game.level}`, 5, 40);
-  //Update Score
-  ctx.font = '20pt tahoma';
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = 'green';
-  ctx.strokeText(`Score:${game.score}`, 165, 40 );
-  //Update Live
-  ctx.drawImage(Resources.get(game.playerLivesIcon), 450, -8, 50, 70);
-  ctx.font = '30pt tahoma';
-  ctx.lineWidth = 2;
-  ctx.fillStyle = 'blue';
-  ctx.strokeStyle = 'black';
-  ctx.strokeText(`${game.playerLives}`, 420, 45);
-  ctx.fillText(`${game.playerLives}`, 420, 45);
+	ctx.strokeText(`Level ${game.level}`, 5, 40);
+	ctx.fillText(`Level ${game.level}`, 5, 40);
+	//Update Score
+	ctx.font = '20pt tahoma';
+	ctx.lineWidth = 2;
+	ctx.strokeStyle = 'green';
+	ctx.strokeText(`Score:${game.score}`, 165, 40 );
+	//Update Lives
+	ctx.drawImage(Resources.get(game.playerLivesIcon), 450, -8, 50, 70);
+	ctx.font = '30pt tahoma';
+	ctx.lineWidth = 2;
+	ctx.fillStyle = 'blue';
+	ctx.strokeStyle = 'black';
+	ctx.strokeText(`${game.playerLives}`, 420, 45);
+	ctx.fillText(`${game.playerLives}`, 420, 45);
 };
 
-//
+//Game level up method
+Game.prototype.levelUp = function(){
+	player.reset();
+	game.score +=100;
+	game.level ++;
+	game.gameOver();
+};
 
-//Pause method
+Game.prototype.gameOver = function() {
+		player.live = false;
+		enemy.live = false;
+		// game.gameOverText();
+		setTimeout(function(){ location.reload()}, 1000);
+}
+
+// Game.prototype.gameOverText = function(){
+// 	ctx.font = "60px Arial";
+// 	ctx.fillStyle = "Black";
+// 	ctx.fillText("GAMEOVER!!!",20,100);
+// };
+
+//Game pause method
 Game.prototype.togglePause = function()
 {
 	!this.paused ? this.paused = true : this.paused = false;
+	ctx.font = "44pt Arial";
+	ctx.fillStyle = "Black";
+	ctx.fillText("GAME PAUSED",20,400);
 }
 
-//Animation
+//Game got hit method
 Game.prototype.gotHit = function(){
 	player.live = false;
 	enemy.live = false;
+	game.score -= 50;
+	game.playerLives --;
 	player.sprite = 'images/ghost.png';
 	setTimeout(function() {
 	player.reset();
 	player.sprite = 'images/char-cat-girl.png';
 	player.live = true;
 	enemy.live = true;
-	}.bind(this), 2000);
+	}.bind(this), 1000);
 //TO BE CONTINUED
 // var imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
 //   var data = imageData.data;
@@ -226,6 +250,6 @@ document.addEventListener('keydown', function (e) {
 var key = e.keyCode;
 if (key === 32)// space key
 {
-    game.togglePause();
+		game.togglePause();
 }
 });
