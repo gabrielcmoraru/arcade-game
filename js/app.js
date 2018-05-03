@@ -20,7 +20,7 @@ Enemy.prototype.update = function(dt) {
 			this.x + this.width / 2 > player.x &&
 			this.y < player.y + player.height / 3 &&
 			this.y + this.height / 3 > player.y)  {
-			game.playerLives >= 1 ? game.gotHit() : game.gameOver();
+			game.playerLives < 1 ? game.gameOver() : game.gotHit();
 		}
 		// You should multiply any movement by the dt parameter
 		// which will ensure the game runs at the same speed for
@@ -162,7 +162,6 @@ Game.prototype.levelUp = function(){
 	player.reset();
 	game.score +=100;
 	game.level ++;
-	game.gameOver();
 };
 
 Game.prototype.gameOver = function() {
