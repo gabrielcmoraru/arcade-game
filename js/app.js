@@ -77,7 +77,7 @@ Player.prototype.update = function() {
 	}
 	if (player.movementKey.upPressed) {
 			this.y -= player.movementKey.speed;
-			if ( this.y < -60) {
+			if ( this.y < -30) {
 				game.gotHit();
 			}
 	}
@@ -126,7 +126,38 @@ Player.prototype.reset = function(e) {
 //Game object
 const Game = function() {
 	this.paused = false;
+	this.level = 1;
+	this.playerLives = 8;
+	this.playerLivesIcon = 'images/heart.png';
+	this.score = 110;
 }
+
+//Game board method
+Game.prototype.board = function(){
+	//Update Level
+	ctx.canvas.style.letterSpacing = '2px';
+	ctx.fillStyle = 'orange';
+	ctx.storkeStyle = 'black';
+	ctx.lineWidth = 5;
+	ctx.font = '20pt tahoma';
+  ctx.strokeText(`Level ${game.level}`, 5, 40);
+  ctx.fillText(`Level ${game.level}`, 5, 40);
+  //Update Score
+  ctx.font = '20pt tahoma';
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = 'green';
+  ctx.strokeText(`Score:${game.score}`, 165, 40 );
+  //Update Live
+  ctx.drawImage(Resources.get(game.playerLivesIcon), 450, -8, 50, 70);
+  ctx.font = '30pt tahoma';
+  ctx.lineWidth = 2;
+  ctx.fillStyle = 'blue';
+  ctx.strokeStyle = 'black';
+  ctx.strokeText(`${game.playerLives}`, 420, 45);
+  ctx.fillText(`${game.playerLives}`, 420, 45);
+};
+
+//
 
 //Pause method
 Game.prototype.togglePause = function()
@@ -138,30 +169,32 @@ Game.prototype.togglePause = function()
 Game.prototype.gotHit = function(){
 	player.live = false;
 	enemy.live = false;
-	player.sprite = 'images/boom.gif'
+	player.sprite = 'images/ghost.png';
 	setTimeout(function() {
 	player.reset();
+	player.sprite = 'images/char-cat-girl.png';
 	player.live = true;
 	enemy.live = true;
 	}.bind(this), 2000);
+//TO BE CONTINUED
+// var imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+//   var data = imageData.data;
+//    var colorade = function() {
+//     for (var i = 0; i < data.length; i += 4) {
+//       data[i]     = data[i] ; // red
+//       data[i + 1] = data[i+1] + 1; // green
+//       data[i + 2] = data[i+2] + 2; // blue
+//       data[i + 3] = data[i+3] + 3; // alpha
+//     }
+//     ctx.putImageData(imageData, 0, 0);
+//   };
+//   colorade();
 
-var imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
-  var data = imageData.data;
-   var colorade = function() {
-    for (var i = 0; i < data.length; i += 4) {
-      data[i]     = data[i] ; // red
-      data[i + 1] = data[i+1] + 1; // green
-      data[i + 2] = data[i+2] + 2; // blue
-      data[i + 3] = data[i+3] + 3; // alpha
-    }
-    ctx.putImageData(imageData, 0, 0);
-  };
-  colorade();
-  ctx.color = 'white';
-	ctx.font = '65px serif';
-  this.text = 'Let\'s try this again';
-  textWidth = ctx.measureText(this.text).width;
-  ctx.fillText(this.text , (ctx.canvas.width/2) - (textWidth / 2), ctx.canvas.height/2);
+//   ctx.color = 'white';
+// 	ctx.font = '65px serif';
+//   this.text = 'Let\'s try this again';
+//   textWidth = ctx.measureText(this.text).width;
+//   ctx.fillText(this.text , (ctx.canvas.width/2) - (textWidth / 2), ctx.canvas.height/2);
 };
 
 let game = new Game();

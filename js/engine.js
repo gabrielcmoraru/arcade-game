@@ -160,6 +160,7 @@ var Engine = (function(global) {
         });
 
         player.render();
+        game.board();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -184,6 +185,15 @@ var Engine = (function(global) {
         'images/char-horn-girl.png',
         'images/char-pink-girl.png',
         'images/char-princess-girl.png',
+        'images/gemblue.png',
+        'images/gemgreen.png',
+        'images/gemorange.png',
+        'images/heart.png',
+        'images/key.png',
+        'images/rock.png',
+        'images/selector.png',
+        'images/star.png',
+        'images/ghost.png'
     ]);
     Resources.onReady(init);
 
