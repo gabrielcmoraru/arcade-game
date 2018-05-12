@@ -1,15 +1,15 @@
 // Enemies our player must avoid
 var Enemy = function(x, y, speed) {
-		// Variables applied to each of our instances go here,
-		// we've provided one for you to get started
+	// Variables applied to each of our instances go here,
+	// we've provided one for you to get started
 
-		// The image/sprite for our enemies, this uses
-		// a helper we've provided to easily load images
-		this.sprite = 'images/enemy-bug.png';
-		this.live = true;
-		this.x = x;
-		this.y = y;
-		this.speed = 150;
+	// The image/sprite for our enemies, this uses
+	// a helper we've provided to easily load images
+	this.sprite = 'images/enemy-bug.png';
+	this.live = true;
+	this.x = x;
+	this.y = y;
+	this.speed = 150;
 };
 
 // Update the enemy's position, required method for game
@@ -20,7 +20,7 @@ Enemy.prototype.update = function(dt) {
 			this.x + this.width / 2 > player.x &&
 			this.y < player.y + player.height / 3 &&
 			this.y + this.height / 3 > player.y)  {
-			game.playerLives < 1 ? game.gameOver() : game.gotHit();
+			 game.gotHit();
 		}
 		// You should multiply any movement by the dt parameter
 		// which will ensure the game runs at the same speed for
@@ -42,7 +42,8 @@ Enemy.prototype.render = function() {
 };
 
 const Player = function() {
-	this.sprite = 'images/char-princess-girl.png';
+	this.spriteChar = 'char-princess-girl';
+	this.sprite = 'images/' + this.spriteChar + '.png';
 	this.live = true;
 	this.x = 200;
 	this.y = 400;
@@ -119,15 +120,15 @@ Player.prototype.disableInput = function(e) {
 }
 
 Player.prototype.reset = function(e) {
-		this.x = 200;
-		this.y = 400;
+	this.x = 200;
+	this.y = 400;
 };
 
 //Game object
 const Game = function() {
 	this.paused = false;
 	this.level = 1;
-	this.playerLives = 9;
+	this.playerLives = 5;
 	this.playerLivesIcon = 'images/heart.png';
 	this.score = 0;
 }
@@ -146,10 +147,10 @@ Game.prototype.board = function(){
 	ctx.font = '20pt tahoma';
 	ctx.lineWidth = 2;
 	ctx.strokeStyle = 'green';
-	ctx.strokeText(`Score:${game.score}`, 165, 40 );
+	ctx.strokeText('Score:' + game.score, (ctx.canvas.width/2) - (ctx.measureText('Score:' + game.score).width / 2), 40 );
 	//Update Lives
 	ctx.drawImage(Resources.get(game.playerLivesIcon), 450, -8, 50, 70);
-	ctx.font = '30pt tahoma';
+	ctx.font = '25pt tahoma';
 	ctx.lineWidth = 2;
 	ctx.fillStyle = 'blue';
 	ctx.strokeStyle = 'black';
@@ -160,22 +161,24 @@ Game.prototype.board = function(){
 //Game level up method
 Game.prototype.levelUp = function(){
 	player.reset();
-	game.score +=100;
-	game.level ++;
+	this.score +=300;
+	this.level ++;
 };
 
 Game.prototype.gameOver = function() {
-		player.live = false;
-		enemy.live = false;
-		// game.gameOverText();
-		setTimeout(function(){ location.reload()}, 1000);
+	player.live = false;
+	enemy.live = false;
+	ctx.rect(0,250,510,250);
+	ctx.fillStyle = 'black';
+	ctx.fill();
+	ctx.font = '35px Arial';
+	ctx.fillStyle = 'white';
+	ctx.fillText('GAME OVER',(ctx.canvas.width/2)-ctx.measureText('GAME OVER').width/2,320);
+	ctx.fillText('Final score:' + game.score, (ctx.canvas.width/2)-ctx.measureText('Final score:' + game.score).width/2,370);
+	ctx.font = '25px Arial red';
+	ctx.fillText('Press ENTER to Play Again',(ctx.canvas.width/2)-ctx.measureText('Press ENTER to Play Again').width/2,420)
 }
 
-// Game.prototype.gameOverText = function(){
-// 	ctx.font = "60px Arial";
-// 	ctx.fillStyle = "Black";
-// 	ctx.fillText("GAMEOVER!!!",20,100);
-// };
 
 //Game pause method
 Game.prototype.togglePause = function()
@@ -190,34 +193,32 @@ Game.prototype.togglePause = function()
 Game.prototype.gotHit = function(){
 	player.live = false;
 	enemy.live = false;
-	game.score -= 50;
-	game.playerLives --;
-	player.sprite = 'images/ghost.png';
-	setTimeout(function() {
-	player.reset();
-	player.sprite = 'images/char-cat-girl.png';
-	player.live = true;
-	enemy.live = true;
-	}.bind(this), 1000);
-//TO BE CONTINUED
-// var imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
-//   var data = imageData.data;
-//    var colorade = function() {
-//     for (var i = 0; i < data.length; i += 4) {
-//       data[i]     = data[i] ; // red
-//       data[i + 1] = data[i+1] + 1; // green
-//       data[i + 2] = data[i+2] + 2; // blue
-//       data[i + 3] = data[i+3] + 3; // alpha
-//     }
-//     ctx.putImageData(imageData, 0, 0);
-//   };
-//   colorade();
-
-//   ctx.color = 'white';
-// 	ctx.font = '65px serif';
-//   this.text = 'Let\'s try this again';
-//   textWidth = ctx.measureText(this.text).width;
-//   ctx.fillText(this.text , (ctx.canvas.width/2) - (textWidth / 2), ctx.canvas.height/2);
+	this.score -= 50;
+	this.playerLives --;
+	if (game.playerLives > 0){
+		setTimeout(function() {
+		player.reset();
+		switch (player.spriteChar) {
+			case 'char-princess-girl':
+				player.spriteChar = 'char-pink-girl';
+				break;
+			case 'char-pink-girl':
+				player.spriteChar = 'char-boy';
+				break;
+			case 'char-boy':
+				player.spriteChar = 'char-horn-girl';
+				break;
+			case 'char-horn-girl':
+				player.spriteChar = 'char-cat-girl';
+				break;
+			default:
+				player.spriteChar = 'char-pink-girl';
+				break;
+		}
+		player.sprite = 'images/' + player.spriteChar + '.png';
+		player.live = true;
+		enemy.live = true;
+		}.bind(this), 1000);}
 };
 
 let game = new Game();
@@ -245,10 +246,19 @@ document.addEventListener('keyup', function(e) {
 document.addEventListener('keydown', function(e) {
 		player.enableInput(player.movementKey[e.keyCode]);
 }, false);
+
 document.addEventListener('keydown', function (e) {
 var key = e.keyCode;
 if (key === 32)// space key
 {
 		game.togglePause();
+}
+});
+
+document.addEventListener('keydown', function (e) {
+var key = e.keyCode;
+if (key === 13)// space key
+{
+		location.reload();
 }
 });
