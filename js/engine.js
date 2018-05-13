@@ -163,6 +163,7 @@ var Engine = (function(global) {
 				player.render();
 				game.board();
 				game.gameOver();
+				gem.render();
 
 		}
 

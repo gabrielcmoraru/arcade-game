@@ -85,6 +85,13 @@ Player.prototype.update = function() {
 	else if(player.movementKey.downPressed && this.y < 440) {
 			this.y += player.movementKey.speed;
 	}
+	//Gem hit detection
+	if (this.x < gem.x + gem.width / 2 &&
+			this.x + this.width / 2 > gem.x &&
+			this.y < gem.y + gem.height / 3 &&
+			this.y + this.height / 3 > gem.y)  {
+			 gem.pickup();
+		}
 }
 
 //Conditions to enable movement
@@ -124,6 +131,47 @@ Player.prototype.reset = function(e) {
 	this.y = 400;
 };
 
+const Gem = function() {
+	this.spriteColor = ['gemgreen', 'gemblue', 'gemorange'];
+	this.gemColor = this.spriteColor[2]
+	this.sprite = 'images/' + this.gemColor + '.png';
+	this.y = Math.floor(Math.random() * (300 - 50 + 1) + 50);
+	this.x = Math.floor(Math.random() * 450);
+}
+
+Gem.prototype.render = function(){
+	ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.width, this.height);
+	this.width = 60 ;
+	this.height = 100;
+};
+
+Gem.prototype.pickup = function() {
+	enemy.live = false;
+	this.x -=9999;
+	this.y -=9999;
+	setTimeout(function(){
+		enemy.live = true;
+		gem.x = Math.floor(Math.random() * (300 - 50 + 1) + 50);
+		gem.y = Math.floor(Math.random() * 450);
+		// switch (gem.gemColor) {
+		// 	case gem.spriteColor[2]:
+		// 		game.score += 4500;
+		// 		gem.gemColor = 'gemblue';
+		// 		break;
+		// 		case gem.spriteColor[1]:
+		// 		game.score += 4500;
+		// 		break;
+		// 		case gem.spriteColor[0]:
+		// 		game.score += 4500;
+		// 		break;
+		// 	default:
+		// 		// statements_def
+		// 		break;
+		// }
+		gem.gemColor = 'gemorange' ? gem.gemColor = 'gemgreen' : gem.spriteColor = 'gemblue'
+	}, 1000);
+}
+
 //Game object
 const Game = function() {
 	this.paused = false;
@@ -160,7 +208,7 @@ Game.prototype.board = function(){
 };
 
 //Game level up method
-Game.prototype.levelUp = function(){
+Game.prototype.levelUp = function() {
 	player.reset();
 	this.score += this.baseScore;
 	this.level ++;
@@ -176,7 +224,7 @@ Game.prototype.levelUp = function(){
 };
 
 //Enemy generator
-Game.prototype.enemyGenerator = function(){
+Game.prototype.enemyGenerator = function() {
 	allEnemies.splice(0, allEnemies.length);
 	let row = [65,150,235];
 	for (let x = 0; x < enemy.totalEnemies; x++) {
@@ -186,6 +234,7 @@ Game.prototype.enemyGenerator = function(){
 	}
 };
 
+//Game over message and initialisation
 Game.prototype.gameOver = function() {
 	if (game.playerLives < 1) {
 		player.live = false;
@@ -247,6 +296,7 @@ Game.prototype.gotHit = function(){
 
 let game = new Game();
 let player = new Player();
+let gem = new Gem();
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
