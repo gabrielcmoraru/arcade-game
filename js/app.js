@@ -131,6 +131,7 @@ const Game = function() {
 	this.playerLives = 5;
 	this.playerLivesIcon = 'images/heart.png';
 	this.score = 0;
+	this.baseScore = 150;
 }
 
 //Game board method
@@ -161,9 +162,17 @@ Game.prototype.board = function(){
 //Game level up method
 Game.prototype.levelUp = function(){
 	player.reset();
-	this.score +=300;
+	this.score += this.baseScore;
 	this.level ++;
 	this.enemyGenerator();
+	if (this.level % 3 == 0) {
+		enemy.speed += 20;
+	}
+	if (this.level % 10 == 0) {
+		enemy.totalEnemies++;
+		player.speed += 20;
+		this.baseScore += 100;
+	}
 };
 
 Game.prototype.enemyGenerator = function(){
