@@ -10,6 +10,7 @@ var Enemy = function(x, y, speed) {
 	this.x = x;
 	this.y = y;
 	this.speed = 150;
+	this.totalEnemies = 3;
 };
 
 // Update the enemy's position, required method for game
@@ -29,8 +30,7 @@ Enemy.prototype.update = function(dt) {
 		if (this.x < 500) {
 			this.x += this.speed * dt;
 		} else {
-			this.x =- Math.floor(Math.random() * 300);
-			this.speed = Math.floor(Math.random() * 300) + minSpeed;
+			this.x =- Math.floor(Math.random() * 100);
 		}
 };
 
@@ -163,20 +163,32 @@ Game.prototype.levelUp = function(){
 	player.reset();
 	this.score +=300;
 	this.level ++;
+	this.enemyGenerator();
+};
+
+Game.prototype.enemyGenerator = function(){
+	allEnemies.splice(0, allEnemies.length);
+	for (let x = 0; x < enemy.totalEnemies; x++) {
+		let eY = Math.floor(Math.random() * 200) + 40;
+		let eX = (Math.floor(Math.random() * 500) - 300);
+		allEnemies.push(new Enemy(eX, eY, enemy.speed))
+	}
 };
 
 Game.prototype.gameOver = function() {
-	player.live = false;
-	enemy.live = false;
-	ctx.rect(0,250,510,250);
-	ctx.fillStyle = 'black';
-	ctx.fill();
-	ctx.font = '35px Arial';
-	ctx.fillStyle = 'white';
-	ctx.fillText('GAME OVER',(ctx.canvas.width/2)-ctx.measureText('GAME OVER').width/2,320);
-	ctx.fillText('Final score:' + game.score, (ctx.canvas.width/2)-ctx.measureText('Final score:' + game.score).width/2,370);
-	ctx.font = '25px Arial red';
-	ctx.fillText('Press ENTER to Play Again',(ctx.canvas.width/2)-ctx.measureText('Press ENTER to Play Again').width/2,420)
+	if (game.playerLives < 1) {
+		player.live = false;
+		enemy.live = false;
+		ctx.rect(0,250,510,250);
+		ctx.fillStyle = 'black';
+		ctx.fill();
+		ctx.font = '35px Arial';
+		ctx.fillStyle = 'white';
+		ctx.fillText('GAME OVER',(ctx.canvas.width/2)-ctx.measureText('GAME OVER').width/2,320);
+		ctx.fillText('Final score:' + game.score, (ctx.canvas.width/2)-ctx.measureText('Final score:' + game.score).width/2,370);
+		ctx.font = '25px Arial red';
+		ctx.fillText('Press ENTER to Play Again',(ctx.canvas.width/2)-ctx.measureText('Press ENTER to Play Again').width/2,420)
+	}
 }
 
 
@@ -198,6 +210,7 @@ Game.prototype.gotHit = function(){
 	if (game.playerLives > 0){
 		setTimeout(function() {
 		player.reset();
+		this.enemyGenerator();
 		switch (player.spriteChar) {
 			case 'char-princess-girl':
 				player.spriteChar = 'char-pink-girl';
@@ -226,11 +239,10 @@ let player = new Player();
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-let enemy = new Enemy(0, 65, 10);
-let enemy2 = new Enemy(240, 150, 5);
-let enemy3 = new Enemy(-750, 230, 15);
-let enemy4 = new Enemy(-1540, 230, 24);
-let allEnemies = [enemy, enemy2, enemy3, enemy4];
+
+let enemy = new Enemy();
+let allEnemies = [];
+game.enemyGenerator();
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player

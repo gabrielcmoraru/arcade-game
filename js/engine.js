@@ -145,6 +145,7 @@ var Engine = (function(global) {
 				}
 
 				renderEntities();
+
 		}
 
 		/* This function is called by the render function and is called on each game
@@ -161,9 +162,8 @@ var Engine = (function(global) {
 
 				player.render();
 				game.board();
-				if (game.playerLives < 1) {
-					game.gameOver();
-				}
+				game.gameOver();
+
 		}
 
 		/* This function does nothing but it could have been a good place to
