@@ -175,10 +175,12 @@ Game.prototype.levelUp = function(){
 	}
 };
 
+//Enemy generator
 Game.prototype.enemyGenerator = function(){
 	allEnemies.splice(0, allEnemies.length);
+	let row = [65,150,235];
 	for (let x = 0; x < enemy.totalEnemies; x++) {
-		let eY = Math.floor(Math.random() * 200) + 40;
+		let eY = row[Math.floor(Math.random() * 3)];
 		let eX = (Math.floor(Math.random() * 500) - 300);
 		allEnemies.push(new Enemy(eX, eY, enemy.speed))
 	}
