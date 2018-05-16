@@ -219,12 +219,20 @@ Game.prototype.board = function(){
 	ctx.fillText(`${game.playerLives} x`, 410 - (ctx.measureText(game.playerLives).width/2 ), 40);
 };
 
+Game.prototype.dataScore = function() {
+	let storedScore = JSON.parse(localStorage.getItem('storedScore')) || [];
+	localStorage.setItem('storedScore', JSON.stringify(this.score));
+	// storedScore.push(game.score);
+	// storedScore.splice(0, storedScore.length - 5);
+};
+
 //Game level up method
 Game.prototype.levelUp = function() {
 	player.reset();
 	gem.randomizeGem();
 	this.score += this.baseScore;
 	this.level ++;
+	this.dataScore();
 	this.enemyGenerator();
 	if (this.level % 3 == 0) {
 		enemy.speed += 20;
