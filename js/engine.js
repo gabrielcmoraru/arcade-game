@@ -100,6 +100,7 @@ var Engine = (function(global) {
 						});}
 				if (player.live) {
 								player.update();}
+				gem.update();
 		}
 
 		/* This function initially draws the "game level", it will then call

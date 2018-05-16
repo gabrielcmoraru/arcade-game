@@ -85,13 +85,6 @@ Player.prototype.update = function() {
 	else if(player.movementKey.downPressed && this.y < 440) {
 			this.y += player.movementKey.speed;
 	}
-	//Gem hit detection
-	if (this.x < gem.x + gem.width / 2 &&
-			this.x + this.width / 2 > gem.x &&
-			this.y < gem.y + gem.height / 3 &&
-			this.y + this.height / 3 > gem.y)  {
-			 gem.pickup();
-		}
 }
 
 //Conditions to enable movement
@@ -132,44 +125,63 @@ Player.prototype.reset = function(e) {
 };
 
 const Gem = function() {
-	this.spriteColor = ['gemgreen', 'gemblue', 'gemorange'];
-	this.gemColor = this.spriteColor[2]
-	this.sprite = 'images/' + this.gemColor + '.png';
-	this.y = Math.floor(Math.random() * (300 - 50 + 1) + 50);
-	this.x = Math.floor(Math.random() * 450);
+	this.gems = [
+		['images/gemorange.png'],
+		['images/gemblue.png'],
+		['images/gemgreen.png']
+	];
+	this.sprite = this.gems[Math.floor(Math.random() * 3)];
+	this.x = Math.floor(Math.random() * (300 - 50 + 1) + 50);
+	this.y = Math.floor(Math.random() * 450);
 }
+
+Gem.prototype.randomizeGem = function(){
+	this.sprite = this.gems[Math.floor(Math.random() * 3)];
+	this.x = Math.floor(Math.random() * (300 - 50 + 1) + 50);
+	this.y = Math.floor(Math.random() * 450);
+};
+
 
 Gem.prototype.render = function(){
 	ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.width, this.height);
-	this.width = 60 ;
-	this.height = 100;
+	this.width = 80;
+	this.height = 160;
+};
+
+Gem.prototype.update = function(){
+		//Gem hit detection
+	if (this.x < player.x + player.width / 2 &&
+			this.x + this.width / 2 > player.x &&
+			this.y < player.y + player.height / 3 &&
+			this.y + this.height / 3 > player.y) {
+			gem.pickup();
+		}
 };
 
 Gem.prototype.pickup = function() {
-	enemy.live = false;
-	this.x -=9999;
-	this.y -=9999;
-	setTimeout(function(){
-		enemy.live = true;
-		gem.x = Math.floor(Math.random() * (300 - 50 + 1) + 50);
-		gem.y = Math.floor(Math.random() * 450);
-		// switch (gem.gemColor) {
-		// 	case gem.spriteColor[2]:
-		// 		game.score += 4500;
-		// 		gem.gemColor = 'gemblue';
-		// 		break;
-		// 		case gem.spriteColor[1]:
-		// 		game.score += 4500;
-		// 		break;
-		// 		case gem.spriteColor[0]:
-		// 		game.score += 4500;
-		// 		break;
-		// 	default:
-		// 		// statements_def
-		// 		break;
-		// }
-		gem.gemColor = 'gemorange' ? gem.gemColor = 'gemgreen' : gem.spriteColor = 'gemblue'
-	}, 1000);
+	switch (gem.sprite) {
+		//Orange
+		case gem.gems[0]:
+			game.score +=500;
+			enemy.live = false;
+			setTimeout(function() {
+				enemy.live = true;
+				},6000);
+			gem.randomizeGem();
+			break;
+		//Blue
+		case gem.gems[1]:
+			game.score +=800;
+			enemy.live = true;
+			gem.randomizeGem();
+			break;
+		//Green
+		case gem.gems[2]:
+			game.playerLives ++;
+			enemy.live = true;
+			gem.randomizeGem();
+			break;
+	}
 }
 
 //Game object
@@ -189,27 +201,28 @@ Game.prototype.board = function(){
 	ctx.fillStyle = 'gold';
 	ctx.storkeStyle = 'black';
 	ctx.lineWidth = 5;
-	ctx.font = '20pt tahoma';
+	ctx.font = '18pt tahoma';
 	ctx.strokeText(`Level ${game.level}`, 5, 40);
 	ctx.fillText(`Level ${game.level}`, 5, 40);
 	//Update Score
-	ctx.font = '20pt tahoma';
+	ctx.font = '18pt tahoma';
 	ctx.lineWidth = 2;
 	ctx.strokeStyle = 'green';
 	ctx.strokeText('Score:' + game.score, (ctx.canvas.width/2) - (ctx.measureText('Score:' + game.score).width / 2), 40 );
 	//Update Lives
 	ctx.drawImage(Resources.get(game.playerLivesIcon), 450, -8, 50, 70);
-	ctx.font = '25pt tahoma';
+	ctx.font = '14pt tahoma';
 	ctx.lineWidth = 2;
 	ctx.fillStyle = 'blue';
 	ctx.strokeStyle = 'black';
-	ctx.strokeText(`${game.playerLives}`, 420, 45);
-	ctx.fillText(`${game.playerLives}`, 420, 45);
+	ctx.strokeText(`${game.playerLives} x `, 410 - (ctx.measureText(game.playerLives).width/2 ), 40);
+	ctx.fillText(`${game.playerLives} x`, 410 - (ctx.measureText(game.playerLives).width/2 ), 40);
 };
 
 //Game level up method
 Game.prototype.levelUp = function() {
 	player.reset();
+	gem.randomizeGem();
 	this.score += this.baseScore;
 	this.level ++;
 	this.enemyGenerator();
