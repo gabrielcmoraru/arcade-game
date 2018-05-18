@@ -26,11 +26,10 @@ Enemy.prototype.update = function(dt) {
 		// You should multiply any movement by the dt parameter
 		// which will ensure the game runs at the same speed for
 		// all computers.
-		let minSpeed = 50;
 		if (this.x < 500) {
 			this.x += this.speed * dt;
 		} else {
-			this.x =- Math.floor(Math.random() * 100);
+			this.x =- game.randomNumber(50,600);
 		}
 };
 
@@ -125,6 +124,7 @@ Player.prototype.reset = function(e) {
 };
 
 const Gem = function() {
+	this.live = true;
 	this.gems = [
 		['images/gemorange.png'],
 		['images/gemblue.png'],
@@ -143,7 +143,9 @@ Gem.prototype.randomizeGem = function(){
 
 
 Gem.prototype.render = function(){
-	ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.width, this.height);
+	if (gem.live) {
+		ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.width, this.height);
+	}
 	this.width = 80;
 	this.height = 160;
 };
@@ -161,26 +163,44 @@ Gem.prototype.update = function(){
 Gem.prototype.pickup = function() {
 	switch (gem.sprite) {
 		//Orange
-		case gem.gems[0]:
-			game.score +=500;
-			enemy.live = false;
-			setTimeout(function() {
-				enemy.live = true;
-				},6000);
-			gem.randomizeGem();
-			break;
+		case (gem.gems[0]):
+		if (gem.live) {
+					let curentPlayer = player.sprite;
+					gem.live = false;
+					game.score +=500;
+					enemy.live = false;
+					player.sprite = 'images/star.png';
+					setTimeout(function() {
+						enemy.live = true;
+						player.sprite = curentPlayer;
+						gem.live = true;
+						}, 6000);
+					gem.randomizeGem();
+				}
+		break;
 		//Blue
 		case gem.gems[1]:
-			game.score +=800;
-			enemy.live = true;
-			gem.randomizeGem();
-			break;
+		if (gem.live) {
+					gem.live = false;
+					game.playerLives ++;
+					setTimeout(function() {
+						gem.live = true;
+						}, 2000);
+					gem.randomizeGem();
+				}
+		break;
 		//Green
 		case gem.gems[2]:
-			game.playerLives ++;
-			enemy.live = true;
-			gem.randomizeGem();
-			break;
+		if (gem.live) {
+					gem.live = false;
+					game.score +=200;
+					player.movementKey.speed = game.randomNumber(3, 8);
+					setTimeout(function() {
+						gem.live = true;
+						}, 4000);
+					gem.randomizeGem();
+				}
+		break;
 	}
 }
 
@@ -193,6 +213,10 @@ const Game = function() {
 	this.score = 0;
 	this.baseScore = 150;
 }
+
+Game.prototype.randomNumber = function(min, max){
+	return Math.floor(Math.random() * (max - min) + min);
+};
 
 //Game board method
 Game.prototype.board = function(){
@@ -228,20 +252,20 @@ Game.prototype.dataScore = function() {
 
 //Game level up method
 Game.prototype.levelUp = function() {
+	if (this.level % 3 == 0) {
+		enemy.speed += 220;
+		this.enemyGenerator();
+	}
+	if (this.level % 10 == 0) {
+		enemy.totalEnemies++;
+		this.baseScore += 100;
+	}
 	player.reset();
 	gem.randomizeGem();
 	this.score += this.baseScore;
 	this.level ++;
 	this.dataScore();
-	this.enemyGenerator();
-	if (this.level % 3 == 0) {
-		enemy.speed += 20;
-	}
-	if (this.level % 10 == 0) {
-		enemy.totalEnemies++;
-		player.speed += 20;
-		this.baseScore += 100;
-	}
+
 };
 
 //Enemy generator
