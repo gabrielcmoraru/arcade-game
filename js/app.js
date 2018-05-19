@@ -1,10 +1,5 @@
-// Enemies our player must avoid
+// Enemie Object our player must avoid
 var Enemy = function(x, y, speed) {
-	// Variables applied to each of our instances go here,
-	// we've provided one for you to get started
-
-	// The image/sprite for our enemies, this uses
-	// a helper we've provided to easily load images
 	this.sprite = 'images/enemy-bug.png';
 	this.live = true;
 	this.x = x;
@@ -16,30 +11,32 @@ var Enemy = function(x, y, speed) {
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-	//Collision logic
-		if (this.x < player.x + player.width / 2 &&
-			this.x + this.width / 2 > player.x &&
-			this.y < player.y + player.height / 3 &&
-			this.y + this.height / 3 > player.y)  {
-			 game.gotHit();
-		}
-		// You should multiply any movement by the dt parameter
-		// which will ensure the game runs at the same speed for
-		// all computers.
-		if (this.x < 500) {
-			this.x += this.speed * dt;
-		} else {
-			this.x =- game.randomNumber(50,600);
-		}
+//Collision logic
+	if (this.x < player.x + player.width / 2 &&
+		this.x + this.width / 2 > player.x &&
+		this.y < player.y + player.height / 3 &&
+		this.y + this.height / 3 > player.y)  {
+		 game.gotHit();
+	}
+	// You should multiply any movement by the dt parameter
+	// which will ensure the game runs at the same speed for
+	// all computers.
+	if (this.x < 500) {
+		this.x += this.speed * dt;
+	} else {
+		this.x =- game.randomNumber(50,600);
+	}
 };
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
 	ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.width, this.height);
+	//get the 'enemy sprite' width and height
 	this.width = Resources.get(enemy.sprite).naturalWidth;
 	this.height = Resources.get(enemy.sprite).naturalHeight;
 };
 
+// Player Object
 const Player = function() {
 	this.spriteChar = 'char-princess-girl';
 	this.sprite = 'images/' + this.spriteChar + '.png';
@@ -48,8 +45,10 @@ const Player = function() {
 	this.y = 400;
 };
 
+// Draw player on the screen
 Player.prototype.render = function() {
 	ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.width, this.height);
+	//get the 'player sprite' width and height
 	this.width = Resources.get(player.sprite).naturalWidth;
 	this.height = Resources.get(player.sprite).naturalHeight;
 };
@@ -67,7 +66,7 @@ Player.prototype.movementKey = {
 	speed : 5
 }
 
-//Conditions for movement
+// Movement logic
 Player.prototype.update = function() {
 	if (player.movementKey.rightPressed && this.x + this.width < 500) {
 			this.x += player.movementKey.speed;
@@ -86,7 +85,7 @@ Player.prototype.update = function() {
 	}
 }
 
-//Conditions to enable movement
+// Conditions to enable movement
 Player.prototype.enableInput = function(e) {
 	if (e == 'right') {
 			player.movementKey.rightPressed = true;
@@ -102,7 +101,7 @@ Player.prototype.enableInput = function(e) {
 	}
 }
 
-//Conditions to disable input
+// Conditions to disable input
 Player.prototype.disableInput = function(e) {
 	if (e == 'right') {
 			player.movementKey.rightPressed = false;
@@ -118,11 +117,14 @@ Player.prototype.disableInput = function(e) {
 	}
 }
 
+// Respawn player on the bottom of the screen
 Player.prototype.reset = function(e) {
 	this.x = 200;
 	this.y = 400;
 };
 
+// Gem Object
+// On run selects a random gem from the 3 available to be used as a sprite
 const Gem = function() {
 	this.live = true;
 	this.gems = [
@@ -130,26 +132,29 @@ const Gem = function() {
 		['images/gemblue.png'],
 		['images/gemgreen.png']
 	];
-	this.sprite = this.gems[Math.floor(Math.random() * 3)];
-	this.x = Math.floor(Math.random() * (300 - 50 + 1) + 50);
-	this.y = Math.floor(Math.random() * 450);
+	this.sprite = this.gems[game.randomNumber(0, 3)];
+	this.x = game.randomNumber(0, 450);
+	this.y = game.randomNumber(0, 300);
 }
 
+// Random select a gem and random assign coordinates
 Gem.prototype.randomizeGem = function(){
-	this.sprite = this.gems[Math.floor(Math.random() * 3)];
-	this.x = Math.floor(Math.random() * (300 - 50 + 1) + 50);
-	this.y = Math.floor(Math.random() * 450);
+	this.sprite = this.gems[game.randomNumber(0, 3)];
+	this.x = game.randomNumber(0, 450);
+	this.y = game.randomNumber(0, 350);
 };
 
-
+// Render gem on screen
 Gem.prototype.render = function(){
 	if (gem.live) {
 		ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.width, this.height);
 	}
-	this.width = 80;
-	this.height = 160;
+	// Randomise the gem width and height to give it a silly animation
+ 	this.width = game.randomNumber(86, 90);
+	this.height = game.randomNumber(146, 150);;
 };
 
+// Logic for gem collision
 Gem.prototype.update = function(){
 		//Gem hit detection
 	if (this.x < player.x + player.width / 2 &&
@@ -160,51 +165,57 @@ Gem.prototype.update = function(){
 		}
 };
 
+// Gem collision action
+// Uppon collision gem's are disabled and enabled after a random amount of time 1-10 sec
+// Orange gem stores the curent player sprite than changes player to a star sprite, freezes all enemyes for a random amout of time 1-10 sec and gives 500 score points then reverts to the original sprite
+// Blue gem gives player a extra life
+// Green gem modifies player speed(increase or decrease) for a random amount of time 1-10 sec
 Gem.prototype.pickup = function() {
 	switch (gem.sprite) {
 		//Orange
 		case (gem.gems[0]):
-		if (gem.live) {
-					let curentPlayer = player.sprite;
-					gem.live = false;
-					game.score +=500;
-					enemy.live = false;
-					player.sprite = 'images/star.png';
-					setTimeout(function() {
-						enemy.live = true;
-						player.sprite = curentPlayer;
-						gem.live = true;
-						}, 6000);
-					gem.randomizeGem();
-				}
-		break;
+			if (gem.live) {
+						let curentPlayer = player.sprite;
+						gem.live = false;
+						game.score +=500;
+						enemy.live = false;
+						player.sprite = 'images/star.png';
+						setTimeout(function() {
+							enemy.live = true;
+							player.sprite = curentPlayer;
+							gem.live = true;
+							}, game.randomNumber(1000, 10000));
+						gem.randomizeGem();
+					}
+			break;
 		//Blue
 		case gem.gems[1]:
-		if (gem.live) {
-					gem.live = false;
-					game.playerLives ++;
-					setTimeout(function() {
-						gem.live = true;
-						}, 2000);
-					gem.randomizeGem();
-				}
-		break;
+			if (gem.live) {
+						gem.live = false;
+						game.playerLives ++;
+						setTimeout(function() {
+							gem.live = true;
+							}, game.randomNumber(1000, 10000));
+						gem.randomizeGem();
+					}
+			break;
 		//Green
 		case gem.gems[2]:
-		if (gem.live) {
-					gem.live = false;
-					game.score +=200;
-					player.movementKey.speed = game.randomNumber(3, 8);
-					setTimeout(function() {
-						gem.live = true;
-						}, 4000);
-					gem.randomizeGem();
-				}
-		break;
+			if (gem.live) {
+						gem.live = false;
+						game.score +=200;
+						player.movementKey.speed = game.randomNumber(3, 8);
+						setTimeout(function() {
+							player.movementKey.speed = 5;
+							gem.live = true;
+							}, game.randomNumber(1000, 10000));
+						gem.randomizeGem();
+					}
+			break;
 	}
 }
 
-//Game object
+// Game object
 const Game = function() {
 	this.paused = false;
 	this.level = 1;
@@ -214,6 +225,7 @@ const Game = function() {
 	this.baseScore = 150;
 }
 
+// Random number generator returns a number between two variables
 Game.prototype.randomNumber = function(min, max){
 	return Math.floor(Math.random() * (max - min) + min);
 };
@@ -243,45 +255,39 @@ Game.prototype.board = function(){
 	ctx.fillText(`${game.playerLives} x`, 410 - (ctx.measureText(game.playerLives).width/2 ), 40);
 };
 
-Game.prototype.dataScore = function() {
-	let storedScore = JSON.parse(localStorage.getItem('storedScore')) || [];
-	localStorage.setItem('storedScore', JSON.stringify(this.score));
-	// storedScore.push(game.score);
-	// storedScore.splice(0, storedScore.length - 5);
-};
-
-//Game level up method
+// Game level up method
 Game.prototype.levelUp = function() {
-	if (this.level % 3 == 0) {
-		enemy.speed += 220;
-		this.enemyGenerator();
-	}
-	if (this.level % 10 == 0) {
-		enemy.totalEnemies++;
+	// Increase score every 3 levels
+	if (this.level % 3 === 0) {
 		this.baseScore += 100;
+	}
+	// Increase total number of enemye's every 10 levels
+	if (this.level % 10 === 0) {
+		enemy.totalEnemies++;
 	}
 	player.reset();
 	gem.randomizeGem();
 	this.score += this.baseScore;
 	this.level ++;
-	this.dataScore();
-
+	this.enemyGenerator();
 };
 
-//Enemy generator
+// Enemy generator
+// Removes all enemy uppon execution and generates new one's with random coordinates
 Game.prototype.enemyGenerator = function() {
 	allEnemies.splice(0, allEnemies.length);
 	let row = [65,150,235];
 	for (let x = 0; x < enemy.totalEnemies; x++) {
-		let eY = row[Math.floor(Math.random() * 3)];
-		let eX = (Math.floor(Math.random() * 500) - 300);
-		allEnemies.push(new Enemy(eX, eY, enemy.speed))
+		let eY = row[game.randomNumber(0, 3)];
+		let eX = (game.randomNumber(0, 500) - game.randomNumber(300, 500));
+		allEnemies.push(new Enemy(eX, eY))
 	}
 };
 
-//Game over message and initialisation
+// Game Over message and initialisation
+// Uppon reaching 0 lives games is stopped
 Game.prototype.gameOver = function() {
-	if (game.playerLives < 1) {
+	if (game.playerLives == 0) {
 		player.live = false;
 		enemy.live = false;
 		ctx.rect(0,250,510,250);
@@ -297,7 +303,7 @@ Game.prototype.gameOver = function() {
 }
 
 
-//Game pause method
+// Game pause method
 Game.prototype.togglePause = function()
 {
 	!this.paused ? this.paused = true : this.paused = false;
@@ -306,11 +312,13 @@ Game.prototype.togglePause = function()
 	ctx.fillText("GAME PAUSED",20,400);
 }
 
-//Game got hit method
+// Game got hit method
+// - penalty for getting hit
+// - changes player sprite with the next one and the next one in a given order
 Game.prototype.gotHit = function(){
 	player.live = false;
 	enemy.live = false;
-	this.score -= 50;
+	this.score -= 500;
 	this.playerLives --;
 	if (game.playerLives > 0){
 		setTimeout(function() {
@@ -342,21 +350,10 @@ Game.prototype.gotHit = function(){
 let game = new Game();
 let player = new Player();
 let gem = new Gem();
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
-
 let enemy = new Enemy();
 let allEnemies = [];
-game.enemyGenerator();
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
 
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
-
-//Keyup and Keydown event listener
+//Keyup and Keydown event listener for movement
 document.addEventListener('keyup', function(e) {
 		player.disableInput(player.movementKey[e.keyCode]);
 }, false);
@@ -365,6 +362,7 @@ document.addEventListener('keydown', function(e) {
 		player.enableInput(player.movementKey[e.keyCode]);
 }, false);
 
+// Event listeners for pause
 document.addEventListener('keydown', function (e) {
 var key = e.keyCode;
 if (key === 32)// space key
@@ -373,9 +371,10 @@ if (key === 32)// space key
 }
 });
 
+// Event listeners for game reset(page reload)
 document.addEventListener('keydown', function (e) {
 var key = e.keyCode;
-if (key === 13)// space key
+if (key === 13)// enter key
 {
 		location.reload();
 }

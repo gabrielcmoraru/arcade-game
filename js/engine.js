@@ -49,9 +49,6 @@ var Engine = (function(global) {
 				update(dt);
 				render();
 				}
-				// if (game.paused) {
-				// 	game.gotHit();
-				// }
 
 				/* Set our lastTime variable which is used to determine the time delta
 				 * for the next time this function is called.
@@ -69,6 +66,7 @@ var Engine = (function(global) {
 		 * game loop.
 		 */
 		function init() {
+				game.enemyGenerator(); //Generate first enemy's
 				reset();
 				lastTime = Date.now();
 				main();
@@ -144,9 +142,7 @@ var Engine = (function(global) {
 								ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
 						}
 				}
-
 				renderEntities();
-
 		}
 
 		/* This function is called by the render function and is called on each game
@@ -160,12 +156,10 @@ var Engine = (function(global) {
 				allEnemies.forEach(function(enemy) {
 						enemy.render();
 				});
-
 				player.render();
-				game.board();
-				game.gameOver();
-				gem.render();
-
+				game.board(); // Render Top Board
+				game.gameOver(); // Render Game Over
+				gem.render(); // Render Gem
 		}
 
 		/* This function does nothing but it could have been a good place to
