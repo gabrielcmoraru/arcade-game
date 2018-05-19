@@ -1,6 +1,16 @@
 frontend-nanodegree-arcade-game
 ===============================
+# The Infinite Random Arcade Game
+## Test you're skills [HERE](https://gabrielcmoraru.github.io/arcade-game/)
+***
+### How to play:
+ - Goal of the game is to __NOT__ be touched by the bugs and get to the water
+ - Every 3 levels you map score will increase
+ - Every 10 levels the number of enemy's increases by 1
+ - If you die you lose some score
+ - Gems:
+    - Orange: 500 points and invulnerable for a random amount of time 1-10 sec
+    - Green: Extra life
+    - Blue: 200 points and speed modifier (slow or fast ...is quite a gamble) for a random amount of time 1-10 sec
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
-
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+#### Use local by downloading the files and running index.html from the main folder
