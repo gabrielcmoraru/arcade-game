@@ -290,6 +290,7 @@ Game.prototype.gameOver = function() {
 	if (game.playerLives == 0) {
 		player.live = false;
 		enemy.live = false;
+		gem.live = false;
 		ctx.rect(0,250,510,250);
 		ctx.fillStyle = 'black';
 		ctx.fill();
@@ -324,6 +325,7 @@ Game.prototype.gotHit = function(){
 		setTimeout(function() {
 		player.reset();
 		this.enemyGenerator();
+		gem.randomizeGem();
 		switch (player.spriteChar) {
 			case 'char-princess-girl':
 				player.spriteChar = 'char-pink-girl';
