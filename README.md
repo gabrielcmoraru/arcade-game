@@ -1,8 +1,8 @@
-frontend-nanodegree-arcade-game
-===============================
 # The Infinite Random Arcade Game
 ## Test you're skills [HERE](https://gabrielcmoraru.github.io/arcade-game/)
 ***
+_A Udacity Nanodegree Project [Info](https://review.udacity.com/?_ga=1.242571394.1230547285.1451946706#!/rubrics/15/view)_
+===============================
 ### How to play:
  - Goal of the game is to __NOT__ be touched by the bugs and get to the water
  - Every 3 levels you map score will increase
